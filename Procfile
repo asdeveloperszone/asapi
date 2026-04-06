@@ -1,1 +1,1 @@
-web: python server.py
+web: pip install -U yt-dlp -q && python server.py
