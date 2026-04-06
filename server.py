@@ -150,10 +150,17 @@ def dedup_run(key, fn):
 # HELPERS
 # ================================================================
 def build_ytdlp_args(extra_args):
-    """Prepend --cookies flag if cookies.txt exists."""
+    """Build yt-dlp args with all bypass options for cloud hosting."""
     args = []
     if os.path.isfile(COOKIES_FILE):
         args += ['--cookies', COOKIES_FILE]
+    # Try multiple player clients — android bypasses most datacenter blocks
+    args += [
+        '--extractor-args', 'youtube:player_client=android,web',
+        '--no-check-certificates',
+        '--force-ipv4',
+        '--user-agent', 'Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.91 Mobile Safari/537.36',
+    ]
     return args + extra_args
 
 def run_ytdlp(args, timeout=45):
