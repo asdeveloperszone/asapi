@@ -299,9 +299,9 @@ def get_formats():
         disk_set(f'info_{yt_id}', info_data)
         return result, None
 
-    result = dedup_run(f'fmt_{yt_id}', lambda: fetch()[0])
+    result, err = dedup_run(f'fmt_{yt_id}', fetch) or (None, ('Failed', 500))
     if result is None:
-        _, (msg, status) = yt_id, fetch()  # get error details
+        msg, status = err if err else ('Unknown error', 500)
         return jsonify({'error': msg}), status
 
     fmt_cache.set(yt_id, result)
